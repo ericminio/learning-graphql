@@ -1,0 +1,23 @@
+{
+  "name": "learning-graphql",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha './**/*.spec.js' --exit --timeout 0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ericminio/learning-graphql.git"
+  },
+  "author": "ericminio",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ericminio/learning-graphql/issues"
+  },
+  "homepage": "https://github.com/ericminio/learning-graphql#readme",
+  "devDependencies": {
+    "chai": "^4.3.4",
+    "mocha": "^9.1.3"
+  }
+}
