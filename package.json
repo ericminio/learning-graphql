@@ -18,6 +18,7 @@
   "homepage": "https://github.com/ericminio/learning-graphql#readme",
   "devDependencies": {
     "chai": "^4.3.4",
+    "graphql": "^16.0.1",
     "mocha": "^9.1.3"
   }
 }
