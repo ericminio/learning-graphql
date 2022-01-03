@@ -6,6 +6,7 @@ var { request } = require('./http-request')
   
   describe('fetching data', () => {
 
+    let server;
     beforeEach((done) => {
       let schema = buildSchema(`
             type Query {
@@ -17,15 +18,18 @@ var { request } = require('./http-request')
               return 'hello world';
           },
       };
-      var app = express();
+      let app = express();
       app.use('/api', graphqlHTTP({
         schema: schema,
         rootValue: resolver,
         graphiql: true,
       }));
-      app.listen(4000, () => {
+      server = app.listen(4000, () => {
         done();
       });
+    })
+    afterEach(() => {
+      server.close()
     })
 
     it('can be done with a POST request', (done) => {
