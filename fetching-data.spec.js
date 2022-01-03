@@ -38,7 +38,7 @@ var { request } = require('./http-request')
           port: 4000,
           path: `/api`,
           method: 'POST',
-          payload: { query: '{ greetings }' }
+          payload: '{ greetings }' 
         })
           .then(response => {
             let answer = JSON.parse(response.body)

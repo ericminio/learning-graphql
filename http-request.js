@@ -18,9 +18,9 @@ const request = (options)=> {
         request.on('error', error => {
             reject(error);
         })
-        request.setHeader('content-type', 'application/json');
+        request.setHeader('content-type', 'application/graphql');
         if (options.payload) {
-            request.write(JSON.stringify(options.payload));
+            request.write(options.payload);
         }
         request.end();
     })
