@@ -4,19 +4,23 @@ var express = require('express');
 var { graphqlHTTP } = require('express-graphql');
 var { request } = require('./http-request')
   
-  describe('fetching data', () => {
+  describe('calling mutation', () => {
 
     let server;
     beforeEach((done) => {
       let schema = buildSchema(`
-            type Query {
-                greetings: String
-            }
-        `);
+        type Query {
+          ignoed: String
+        }
+
+        type Mutation {
+          welcome(name: String): String
+        }
+      `);
       let resolver = {
-          greetings: () => {
-              return 'hello world';
-          },
+        welcome: (visitor) => {
+          return `hello ${visitor.name}`;
+        },
       };
       let app = express();
       app.use('/api', graphqlHTTP({
@@ -31,17 +35,17 @@ var { request } = require('./http-request')
       server.close()
     })
 
-    it('can be done with a POST request', (done) => {
+    it('requires the mutation keyword in the client query', (done) => {
         request({
           hostname: 'localhost',
           port: 4000,
           path: `/api`,
           method: 'POST',
-          payload: '{ greetings }' 
+          payload: 'mutation { welcome(name:"Joe") }'
         })
           .then(response => {
             let answer = JSON.parse(response.body)
-            expect(answer).to.deep.equal({ data: { greetings:'hello world' }})
+            expect(answer).to.deep.equal({ data: { welcome:'hello Joe' }})
             done();
           })
           .catch(error => done(error))          
