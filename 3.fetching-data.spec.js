@@ -47,7 +47,7 @@ describe('fetching data', () => {
         .catch(error => done(error))          
   });
 
-  it('application/json content type needs more info', (done) => {
+  it('needs more info to use content type application/json', (done) => {
       request({
         hostname: 'localhost',
         port: 4000,
