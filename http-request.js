@@ -18,7 +18,8 @@ const request = (options)=> {
         request.on('error', error => {
             reject(error);
         })
-        request.setHeader('content-type', 'application/graphql');
+        let contentType = options.contentType || 'application/graphql'
+        request.setHeader('content-type', contentType);
         if (options.payload) {
             request.write(options.payload);
         }

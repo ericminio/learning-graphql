@@ -46,4 +46,21 @@ describe('fetching data', () => {
         })
         .catch(error => done(error))          
   });
+
+  it('application/json content type needs more info', (done) => {
+      request({
+        hostname: 'localhost',
+        port: 4000,
+        path: `/api`,
+        method: 'POST',
+        contentType: 'application/json',
+        payload: JSON.stringify({ query: '{ greetings }' })
+      })
+        .then(response => {
+          let answer = JSON.parse(response.body)
+          expect(answer).to.deep.equal({ data: { greetings:'hello world' }})
+          done();
+        })
+        .catch(error => done(error))          
+  });
 });
