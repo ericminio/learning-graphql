@@ -8,6 +8,7 @@ const fetch = require('cross-fetch');
 describe('apollo client', () => {
 
   let server;
+  let contentType;
   beforeEach((done) => {
     let schema = buildSchema(`
       type Query {
@@ -20,6 +21,10 @@ describe('apollo client', () => {
       },
     };
     let app = express();
+    app.use((req, res, next) => {
+      contentType = req.headers['content-type']
+      next();
+    })
     app.use('/api', graphqlHTTP({
       schema: schema,
       rootValue: resolver,
@@ -49,4 +54,8 @@ describe('apollo client', () => {
       })
       .catch(error => done(error))          
   });
+
+  it('uses application/json content type', () => {
+    expect(contentType).to.equal('application/json')
+  })
 });
