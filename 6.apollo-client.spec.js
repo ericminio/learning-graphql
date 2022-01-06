@@ -10,7 +10,7 @@ describe('apollo client', () => {
 
   let server;
   let contentType;
-  let bacthSize;
+  let batchSize;
   beforeEach((done) => {
     let schema = buildSchema(`
       type Query {
