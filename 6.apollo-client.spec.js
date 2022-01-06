@@ -11,39 +11,23 @@ describe('apollo client', () => {
   let server;
   let contentType;
   let batchSize;
-  beforeEach((done) => {
-    let schema = buildSchema(`
-      type Query {
-          greetings: String
-      }
-    `);
-    let resolver = {
-      greetings: () => {
-          return 'hello world';
-      },
-    };
+  beforeEach(async () => {
     let app = express();
     app.use(express.json());
     app.use((req, res, next) => {
       contentType = req.headers['content-type']
       next();
-    })
-    app.use('/single', graphqlHTTP({
-      schema: schema,
-      rootValue: resolver,
-    }));
+    });
     app.use('/batch', (req, res, next) => {
       batchSize = req.body.length;
-      req.body = req.body[0]
+      req.body = req.body[0];
       next();
-    })
-    app.use('/batch', graphqlHTTP({
-      schema: schema,
-      rootValue: resolver,
-    }));    
-    server = app.listen(4000, () => {
-      done();
     });
+    app.use('/', graphqlHTTP({
+      schema: buildSchema(`type Query { greetings: String } `),
+      rootValue: { greetings: 'hello world' },
+    }));  
+    server = await app.listen(4000);
   })
   afterEach(() => {
     server.close()
@@ -52,8 +36,8 @@ describe('apollo client', () => {
   it('needs a fetch function', (done) => {
     const client = new ApolloClient({
       link: new HttpLink({
-        uri: 'http://localhost:4000/single',        
-        fetch: fetch,
+        uri: 'http://localhost:4000/',        
+        fetch,
       }),
       cache: new InMemoryCache(),
     });
@@ -70,8 +54,8 @@ describe('apollo client', () => {
   it('uses application/json content type', () => {
     const client = new ApolloClient({
       link: new HttpLink({
-        uri: 'http://localhost:4000/single',        
-        fetch: fetch,
+        uri: 'http://localhost:4000/',        
+        fetch,
       }),
       cache: new InMemoryCache(),
     });
@@ -89,7 +73,7 @@ describe('apollo client', () => {
     const client = new ApolloClient({
       link: new BatchHttpLink({
         uri: 'http://localhost:4000/batch',        
-        fetch: fetch,
+        fetch,
       }),
       cache: new InMemoryCache(),
     });
