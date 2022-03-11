@@ -16,6 +16,8 @@ jobs:
         uses: actions/checkout@v2
       - name: info
         run: |
+          nvm --version
+          nvm use
           node --version
           npm --version
       - name: install
