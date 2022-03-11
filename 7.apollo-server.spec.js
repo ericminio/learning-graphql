@@ -13,14 +13,19 @@ describe('apollo server', () => {
         type Greeting { 
           text: String 
         }
+        type Header { 
+          text: String 
+        }
 
         type Query { 
           greetings: Greeting 
+          headers: Header
         }
       `, 
       resolvers: {
         Query: {
           greetings: () => ({ text:'hello world' }),
+          headers: () => ({ text:'welcome' }),
         },
       } 
     });
@@ -72,5 +77,29 @@ describe('apollo server', () => {
         done();
       })
       .catch(error => done(error))          
-});
+  });
+
+  it('can answer to batch queries from native HTTP POST', (done) => {
+    request({
+      hostname: 'localhost',
+      port: 4000,
+      path: `/`,
+      method: 'POST',
+      payload: JSON.stringify({ query: '{ greetings { text } headers { text } }'}),
+      contentType: 'application/json',
+    })
+      .then(response => {
+        let answer = JSON.parse(response.body)
+        expect(answer.data).to.deep.equal({ 
+          greetings: { 
+            text: 'hello world'
+          },
+          headers: { 
+            text: 'welcome'
+          }
+        })
+        done();
+      })
+      .catch(error => done(error))          
+  });
 });
