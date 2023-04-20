@@ -134,7 +134,7 @@ describe('apollo server', () => {
         client
             .query({
                 query: gql`
-                    query items($count: Int!) {
+                    query IgnoredNameCanEvenBeOmitted($count: Int!) {
                         items(count: $count) {
                             title
                         }
