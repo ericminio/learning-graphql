@@ -156,4 +156,38 @@ describe('apollo server', () => {
             })
             .catch((error) => done(error));
     });
+
+    it('accepts field name modification request', (done) => {
+        const client = new ApolloClient({
+            link: new HttpLink({
+                uri: 'http://localhost:4000/',
+                fetch,
+            }),
+            cache: new InMemoryCache(),
+        });
+        client
+            .query({
+                query: gql`
+                    query IgnoredNameCanEvenBeOmitted($count: Int!) {
+                        modifiedName: items(count: $count) {
+                            title
+                        }
+                    }
+                `,
+                variables: {
+                    count: 3,
+                },
+            })
+            .then((response) => {
+                expect(response.data).to.deep.equal({
+                    modifiedName: [
+                        { __typename: 'Item', title: 'title - 0' },
+                        { __typename: 'Item', title: 'title - 1' },
+                        { __typename: 'Item', title: 'title - 2' },
+                    ],
+                });
+                done();
+            })
+            .catch((error) => done(error));
+    });
 });
