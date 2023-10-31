@@ -97,6 +97,30 @@ describe('apollo server', () => {
             .catch((error) => done(error));
     });
 
+    it('can answer to query with param from native HTTP POST', (done) => {
+        request({
+            hostname: 'localhost',
+            port: 4000,
+            path: `/`,
+            method: 'POST',
+            payload: JSON.stringify({
+                query: 'query GetItems($count: Int!) { items(count: $count) { title } }',
+                variables: {
+                    count: 2,
+                },
+            }),
+            contentType: 'application/json',
+        })
+            .then((response) => {
+                let answer = JSON.parse(response.body);
+                expect(answer.data).to.deep.equal({
+                    items: [{ title: 'title - 0' }, { title: 'title - 1' }],
+                });
+                done();
+            })
+            .catch((error) => done(error));
+    });
+
     it('can answer to batch queries from native HTTP POST', (done) => {
         request({
             hostname: 'localhost',
